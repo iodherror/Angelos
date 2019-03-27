@@ -52,5 +52,15 @@ public class Person {
 
 ~~~
 
+## Kyrios模块
 
+提供JOOQ的快速集成功能。
+需要jdk8+。
+使用说明待制作。
+
+## Virtue模块
+
+优化异常处理逻辑。
+需要jdk8+。
+使用说明待制作。
 
