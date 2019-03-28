@@ -56,11 +56,34 @@ public class Person {
 
 提供JOOQ的快速集成功能。
 需要jdk8+。
-使用说明待制作。
+通过``kyrios.yml``进行数据库连接池的相关配置后，
+用``Kyrios.Companion.getCtx()``来获取``DSLContext``对象，JOOQ的准备工作就完成了。
 
 ## Virtue模块
 
-优化异常处理逻辑。
+优化异常处理逻辑，提供了多个异常断言方法。
 需要jdk8+。
-使用说明待制作。
+主要功能位于``ExceptionLauncherImpl``.
 
+简单示例：
+~~~java
+public class Person {
+
+    //省略
+
+    public static void main(String[] args) {
+        
+        ExceptionLauncher exceptionLauncher = new ExceptionLauncherImpl();//spring中你可以注入该对象，或者其他方式。
+        
+        boolean isBillAdult = Exia.of(new Person())   //对Person对象进行封装
+                .apply(o-> o.setName("Bill").setAge(1))   //对Person进行初始化
+                .apply(Person::sayHello)    //执行Person的方法  输出 Hello
+                .run(Person::isAdult);      //执行Person的方法并获取其返回值
+        
+        exceptionLauncher.checkArgument(isBillAdult,"bill must be adult");// throw exception
+        
+        System.out.println(isBillAdult); //没有执行
+    }
+}                          
+
+~~~
