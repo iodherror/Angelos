@@ -1,6 +1,6 @@
 package cn.qcsoft.angelos
 
-import cn.qcsoft.angelos.util.YmlUtils
+import cn.qcsoft.angelos.util.YamlUtils
 import com.zaxxer.hikari.HikariDataSource
 import org.jooq.Configuration
 import org.jooq.DSLContext
@@ -24,6 +24,10 @@ private constructor() : Closeable {
      * database source
      */
     private lateinit var dataSource: HikariDataSource
+    /**
+     * default config file name
+     */
+    private val DEFAULT_CONFIG_NAME = "kyrios.yml"
 
     /**
      * get DSL context
@@ -32,39 +36,42 @@ private constructor() : Closeable {
      */
     val context: DSLContext?
         get() {
-            return YmlUtils.kyrios.getOrDefault("enable",false).takeIf { it is Boolean && it }?.let {
+
+            return YamlUtils.getCustomConfigOrDefault(DEFAULT_CONFIG_NAME,"enable",false)
+                    .takeIf { it is Boolean && it }?.let {
                 return DSL.using(this.configuration)
             }
         }
 
     init {
 
-        YmlUtils.kyrios.getOrDefault("enable",false).takeIf { it is Boolean && it }
+        YamlUtils.getCustomConfigOrDefault(DEFAULT_CONFIG_NAME,"enable",false)
+            .takeIf { it is Boolean && it }
             ?.let  {
                 this.dataSource = HikariDataSource().apply {
-                this.driverClassName = YmlUtils.kyrios["driverName"]
-                this.jdbcUrl = YmlUtils.kyrios["url"]
-                this.username = YmlUtils.kyrios["username"]
-                this.password = YmlUtils.kyrios["password"]
+                this.driverClassName = YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"driverName")
+                this.jdbcUrl = YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"url")
+                this.username = YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"username")
+                this.password = YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"password")
 
                 this.addDataSourceProperty("maxConnectionsPerPartition"
-                        , YmlUtils.kyrios["maxConnectionsPerPartition"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"maxConnectionsPerPartition"))
                 this.addDataSourceProperty("minConnectionsPerPartition"
-                        , YmlUtils.kyrios["minConnectionsPerPartition"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"minConnectionsPerPartition"))
                 this.addDataSourceProperty("idleConnectionTestPeriodInMinutes"
-                        , YmlUtils.kyrios["idleConnectionTestPeriodInMinutes"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"idleConnectionTestPeriodInMinutes"))
                 this.addDataSourceProperty("maxConnectionAgeInSeconds"
-                        , YmlUtils.kyrios["maxConnectionAgeInSeconds"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"maxConnectionAgeInSeconds"))
                 this.addDataSourceProperty("idleMaxAgeInMinutes"
-                        , YmlUtils.kyrios["idleMaxAgeInMinutes"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"idleMaxAgeInMinutes"))
                 this.addDataSourceProperty("cachePrepStmts"
-                        , YmlUtils.kyrios["cachePrepStmts"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"cachePrepStmts"))
                 this.addDataSourceProperty("prepStmtCacheSize"
-                        , YmlUtils.kyrios["prepStmtCacheSize"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"prepStmtCacheSize"))
                 this.addDataSourceProperty("prepStmtCacheSqlLimit"
-                        , YmlUtils.kyrios["prepStmtCacheSqlLimit"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"prepStmtCacheSqlLimit"))
                 this.addDataSourceProperty("connectionTimeout"
-                        , YmlUtils.kyrios["connectionTimeout"])
+                        , YamlUtils.getCustomConfig(DEFAULT_CONFIG_NAME,"connectionTimeout"))
                 }.also {
                     this.configuration = DefaultConfiguration()
                             .set(it)
@@ -116,6 +123,7 @@ private constructor() : Closeable {
             fun transaction(runnable: Runnable) {
                 ctx?.transaction{ _ -> runnable.run() }
             }
+
         }
     }
 
