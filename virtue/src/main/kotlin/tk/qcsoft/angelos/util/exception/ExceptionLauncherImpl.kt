@@ -1,4 +1,4 @@
-package cn.qcsoft.angelos.util.exception
+package tk.qcsoft.angelos.util.exception
 
 import org.slf4j.LoggerFactory
 import java.util.*

@@ -1,4 +1,4 @@
-package cn.qcsoft.angelos.util
+package tk.qcsoft.angelos.util
 
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember

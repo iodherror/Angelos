@@ -1,4 +1,4 @@
-package cn.qcsoft.angelos.util.exception
+package tk.qcsoft.angelos.util.exception
 
 /**
  * Created by QC on 2018/7/19 16:54.

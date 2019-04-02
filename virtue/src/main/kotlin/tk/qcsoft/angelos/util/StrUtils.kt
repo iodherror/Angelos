@@ -1,4 +1,4 @@
-package cn.qcsoft.angelos.util
+package tk.qcsoft.angelos.util
 
 import org.slf4j.helpers.MessageFormatter
 

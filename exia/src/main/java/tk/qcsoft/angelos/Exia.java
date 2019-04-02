@@ -1,4 +1,4 @@
-package cn.qcsoft.angelos;
+package tk.qcsoft.angelos;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -164,7 +164,7 @@ public interface Exia<T>{
             if(needRun && i < retryTimes ) {
                 try {
                     Thread.sleep(interval);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     throw new ExceptionWrapper(e);
                 }
             }

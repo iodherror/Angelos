@@ -1,6 +1,6 @@
-package cn.qcsoft.angelos
+package tk.qcsoft.angelos
 
-import cn.qcsoft.angelos.util.YamlUtils
+import tk.qcsoft.angelos.util.YamlUtils
 import com.zaxxer.hikari.HikariDataSource
 import org.jooq.Configuration
 import org.jooq.DSLContext
