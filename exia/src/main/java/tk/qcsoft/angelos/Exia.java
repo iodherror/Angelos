@@ -34,6 +34,7 @@ public interface Exia<T>{
     /**
      * Wrap obj with Exia
      *
+     * @param <T> the type of the wrapped obj
      * @param value wrapped obj
      *
      * @return Exia obj
@@ -59,6 +60,7 @@ public interface Exia<T>{
     /**
      * Initialize the wrapped obj by {@code applier} and return it .
      *
+     * @param <E> the type of Exception that may be thrown
      * @param applier a java consumer that its exception is wrapped up in RuntimeException .
      *
      * @return wrapped obj
@@ -71,6 +73,7 @@ public interface Exia<T>{
     /**
      * Apply the wrapped obj by {@code applier} and return the Exia of it .
      *
+     * @param <E> the type of Exception that may be thrown
      * @param applier a java consumer that its exception is wrapped up in RuntimeException .
      *
      * @return Exia obj
@@ -83,6 +86,8 @@ public interface Exia<T>{
     /**
      * Run the wrapped obj by {@code runner} and return the result of it .
      *
+     * @param <K> the type of the result of the function
+     * @param <E> the type of Exception that may be thrown
      * @param runner a java function that its exception is wrapped up in RuntimeException .
      *
      * @return result of {@code runner}
@@ -95,6 +100,8 @@ public interface Exia<T>{
      * Apply the wrapped obj by {@code applier} when the {@code predicate} is true
      * and return the Exia of it .
      *
+     * @param <R> the type of Exception that may be thrown by the {@code predicate}
+     * @param <E> the type of Exception that may be thrown by the {@code applier}
      * @param predicate a java predicate that its exception is wrapped up in RuntimeException .
      * @param applier a java consumer that its exception is wrapped up in RuntimeException .
      *
@@ -109,6 +116,7 @@ public interface Exia<T>{
     /**
      * when the {@code predicate} is true ,return the Optional of it ,or else return {@code Optional.empty()}
      *
+     * @param <E> the type of Exception that may be thrown
      * @param predicate a java predicate that its exception is wrapped up in RuntimeException .
      *
      * @return Optional of the wrapped obj
@@ -122,6 +130,9 @@ public interface Exia<T>{
      * Run the wrapped obj by {@code runner} when the {@code predicate} is true
      * and return the Optional of result,or else return {@code Optional.empty()}
      *
+     * @param <K> the type of the result of the function
+     * @param <R> the type of Exception that may be thrown by the {@code predicate}
+     * @param <E> the type of Exception that may be thrown by the {@code runner}
      * @param predicate a java predicate that its exception is wrapped up in RuntimeException .
      * @param runner a java function that its exception is wrapped up in RuntimeException .
      *
@@ -138,6 +149,7 @@ public interface Exia<T>{
      * Run the wrapped obj by {@code runner} when the {@code needRetry} is true
      * and return the Optional of result,or else return {@code Optional.empty()}
      *
+     * @param <K> the type of the result of the function
      * @param needRetry a java predicate that its exception is wrapped up in RuntimeException .
      * @param runner a java function that its exception is wrapped up in RuntimeException .
      * @param retryTimes the max retry times when {@code needRetry} is true .
@@ -176,6 +188,7 @@ public interface Exia<T>{
     /**
      * wrap the checked exception to unchecked exception
      *
+     * @param <E> the type of Exception that may be thrown by the {@code throwingConsumer}
      * @param throwingConsumer a custom consumer that defines some exception .
      *
      * @return a java consumer
@@ -196,6 +209,8 @@ public interface Exia<T>{
     /**
      * wrap the checked exception to unchecked exception
      *
+     * @param <K> the type of the result of the function
+     * @param <E> the type of Exception that may be thrown
      * @param throwingFunction a custom function that defines some exception .
      *
      * @return a java Function
@@ -216,6 +231,7 @@ public interface Exia<T>{
     /**
      * wrap the checked exception to unchecked exception
      *
+     * @param <E> the type of Exception that may be thrown
      * @param throwingPredicate a custom predicate that defines some exception .
      *
      * @return a java predicate
