@@ -2,6 +2,15 @@
 
 Angelos是一个轻量级java工具库。旨在强化Java开发效率。目前主要涉及提升java函数式编程的体验。
 
+## pom引入
+~~~
+        <dependency>
+            <groupId>tk.qcsoft.angelos</groupId>
+            <artifactId>exia</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+~~~
+
 
 ## Exia模块
 
