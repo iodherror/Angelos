@@ -21,12 +21,13 @@ public interface Exia<T>{
     String STRING_TEMPLATE_DEFAULT = "\\$\\{.+?}";
     Pattern PATTERN_DEFAULT = Pattern.compile(STRING_TEMPLATE_DEFAULT);
 
-    @SuppressWarnings("unchecked")
+
     /**
      * Get the wrapped obj
      *
      * @return wrapped obj
      */
+    @SuppressWarnings("unchecked")
     default T get(){
         return (T) this;
     }
@@ -49,6 +50,7 @@ public interface Exia<T>{
                 return this;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public T get(){
                 return instance;

@@ -104,4 +104,9 @@ public final class Ptolemaios {
         return String.join(delimiter, infos);
     }
 
+    private static class NoDynamesException extends RuntimeException {
+        NoDynamesException(){
+            super("can not found Any Dynames!");
+        }
+    }
 }

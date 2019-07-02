@@ -28,13 +28,13 @@ public interface Switcher<T>{
         return null;
     }
 
-    Switcher<T> setRule(BiFunction<T, T, Boolean> rule);
+    <N> Switcher<T> setRule(BiFunction<T, N, Boolean> rule);
 
-    BiFunction<T, T, Boolean> getRule();
+    <N> BiFunction<T, N, Boolean> getRule();
 
-    Map<Function,T[]> getCases();
+    Map<Function, Object[]> getCases();
 
-    <A> Switcher<T> eCase(Function<T, A> fun, T... params);
+    <A,N> Switcher<T> eCase(Function<T, A> fun, N... params);
 
     /**
      * Wrap obj with Switcher
@@ -52,8 +52,9 @@ public interface Switcher<T>{
      * Wrap obj with Switcher
      *
      * @param <T> the type of the wrapped obj
-     * @param <K> the default Value when match no case
+     * @param <K> the type of default value
      * @param value wrapped obj
+     * @param defaultValue the default value when match no case
      *
      * @return Switcher obj
      */
@@ -62,10 +63,10 @@ public interface Switcher<T>{
 
             private T instance;
             private K defaultValue;
-            private BiFunction<T, T, Boolean> rule;
-            private Map<Function,T[]> caseMap;
+            private BiFunction<T, Object, Boolean> rule;
+            private Map<Function,Object[]> caseMap;
 
-            Switcher<T> init(T instance,K defaultValue) {
+            Switcher<T> init(T instance, K defaultValue) {
                 this.instance = instance;
                 this.defaultValue = defaultValue;
                 caseMap = new LinkedHashMap<>();
@@ -84,23 +85,23 @@ public interface Switcher<T>{
             }
 
             @Override
-            public Switcher<T> setRule(BiFunction<T, T, Boolean> newRule) {
-                rule = newRule;
+            public <N> Switcher<T> setRule(BiFunction<T, N, Boolean> newRule) {
+                rule = (BiFunction<T, Object, Boolean>) newRule;
                 return this;
             }
 
             @Override
-            public BiFunction<T, T, Boolean> getRule() {
-                return rule;
+            public <N> BiFunction<T, N, Boolean> getRule() {
+                return (BiFunction<T, N, Boolean>)rule;
             }
 
             @Override
-            public Map<Function,T[]> getCases() {
+            public Map<Function, Object[]> getCases() {
                 return caseMap;
             }
 
             @Override
-            public <A> Switcher<T> eCase(Function<T,A> fun,T... params) {
+            public <A,N> Switcher<T> eCase(Function<T,A> fun, N... params) {
                 caseMap.put(fun,params);
                 return this;
             }

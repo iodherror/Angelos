@@ -41,6 +41,7 @@ public class YamlUtils {
         return Optional.ofNullable(YamlUtils.<T>getCustomConfig(CONFIG_NAME,key)).orElse(defalutValue);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getCustomConfig(String configFileName,String key){
         Map target = yamlCache.getOrDefault(configFileName,
                 loadFile(configFileName));
