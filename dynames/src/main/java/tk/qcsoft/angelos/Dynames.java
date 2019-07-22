@@ -2,8 +2,8 @@ package tk.qcsoft.angelos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Channing Qiu on 2019/6/24 16:59.
@@ -23,7 +23,7 @@ public interface Dynames<D,R>  {
      *
      * @return target information
      */
-    String[][] initTargets();
+    Object[][] initTargets();
 
     /**
      * Determine whether the target can be attacked by this Dynames
@@ -33,9 +33,14 @@ public interface Dynames<D,R>  {
      */
     default boolean canAttack(String... target){
 
-        return array2List(initTargets()).stream().anyMatch(targetInfos ->
-                targetInfos.size() == target.length
-            && Arrays.stream(target).allMatch(targetInfos::contains)
+        return array2List(initTargets()).stream().anyMatch(
+                targetInfos -> {
+                    if(targetInfos.size() != target.length) return false;
+                    for (int i = 0; i < target.length; i++) {
+                        if(!targetInfos.get(i).test(target[i])) return false;
+                    }
+                    return true;
+                }
         );
     }
 
@@ -55,14 +60,25 @@ public interface Dynames<D,R>  {
      * @param targetInfo target information
      * @return target information
      */
-    default List<List<String>> array2List(String[][] targetInfo){
+    default List<LinkedList<TargetRule>> array2List(Object[][] targetInfo){
 
         return Arrays.stream(targetInfo).collect(
-                    ArrayList::new,
-                    (lists, strings) ->
-                        lists.add(Arrays.stream(strings).collect(Collectors.toList())),
-                    ArrayList::addAll
-                );
+                ArrayList::new,
+                (lists, objects) -> {
+                    LinkedList<TargetRule> list = new LinkedList<>();
+                    Arrays.stream(objects).forEach(o -> {
+                        if(o instanceof java.lang.String){
+                            list.add(TargetRule.SAME((String)o));
+                        } else if(o instanceof TargetRule) {
+                            list.add((TargetRule)o);
+                        } else{
+                            throw new UnsupportedOperationException("Unsupported class:"+o.getClass());
+                        }
+                    });
+                    lists.add(list);
+                },
+                ArrayList::addAll
+        );
     }
 
 }

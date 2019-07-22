@@ -1,14 +1,17 @@
 package tk.qcsoft.angelos;
 
+import tk.qcsoft.angelos.functionIF.ThrowingConsumer;
+import tk.qcsoft.angelos.functionIF.ThrowingFunction;
+import tk.qcsoft.angelos.functionIF.ThrowingPredicate;
+import tk.qcsoft.angelos.wrapper.ExceptionWrapper;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -68,7 +71,7 @@ public interface Exia<T>{
      * @return wrapped obj
      */
     default <E extends Exception> T init(ThrowingConsumer<T, E> applier){
-        throwingConsumerWrapper(applier).accept(get());
+        applier.wrapAccept(get());
         return get();
     }
 
@@ -81,21 +84,21 @@ public interface Exia<T>{
      * @return Exia obj
      */
     default <E extends Exception> Exia<T> apply(ThrowingConsumer<T, E> applier) {
-        throwingConsumerWrapper(applier).accept(get());
+        applier.wrapAccept(get());
         return this;
     }
 
     /**
      * Run the wrapped obj by {@code runner} and return the result of it .
      *
-     * @param <K> the type of the result of the function
+     * @param <K> the type of the result of the functionIF
      * @param <E> the type of Exception that may be thrown
-     * @param runner a java function that its exception is wrapped up in RuntimeException .
+     * @param runner a java functionIF that its exception is wrapped up in RuntimeException .
      *
      * @return result of {@code runner}
      */
     default <K,E extends Exception> K run(ThrowingFunction<T, K, E> runner) {
-        return throwingFunctionWrapper(runner).apply(get());
+        return runner.wrapApply(get());
     }
 
     /**
@@ -111,7 +114,7 @@ public interface Exia<T>{
      */
     default <R extends Exception,E extends Exception> Exia<T> takeApply(
             ThrowingPredicate<T, R> predicate, ThrowingConsumer<T, E> applier) {
-        if(throwingPredicateWrapper(predicate).test(get())) throwingConsumerWrapper(applier).accept(get());
+        if(predicate.wrapTest(get())) applier.wrapAccept(get());
         return this;
     }
 
@@ -124,7 +127,7 @@ public interface Exia<T>{
      * @return Optional of the wrapped obj
      */
     default <E extends Exception> Optional<T> takeIf(ThrowingPredicate<T, E> predicate) {
-        if(throwingPredicateWrapper(predicate).test(get())) return Optional.of(get());
+        if(predicate.wrapTest(get())) return Optional.of(get());
         return Optional.empty();
     }
 
@@ -132,18 +135,18 @@ public interface Exia<T>{
      * Run the wrapped obj by {@code runner} when the {@code predicate} is true
      * and return the Optional of result,or else return {@code Optional.empty()}
      *
-     * @param <K> the type of the result of the function
+     * @param <K> the type of the result of the functionIF
      * @param <R> the type of Exception that may be thrown by the {@code predicate}
      * @param <E> the type of Exception that may be thrown by the {@code runner}
      * @param predicate a java predicate that its exception is wrapped up in RuntimeException .
-     * @param runner a java function that its exception is wrapped up in RuntimeException .
+     * @param runner a java functionIF that its exception is wrapped up in RuntimeException .
      *
      * @return Optional of result
      */
     default <K,R extends Exception,E extends Exception> Optional<K> takeRun(
             ThrowingPredicate<T, R> predicate, ThrowingFunction<T, K, E> runner) {
-        if(throwingPredicateWrapper(predicate).test(get()))
-            return Optional.of(throwingFunctionWrapper(runner).apply(get()));
+        if(predicate.wrapTest(get()))
+            return Optional.of(runner.wrapApply(get()));
         return Optional.empty();
     }
 
@@ -151,9 +154,9 @@ public interface Exia<T>{
      * Run the wrapped obj by {@code runner} when the {@code needRetry} is true
      * and return the Optional of result,or else return {@code Optional.empty()}
      *
-     * @param <K> the type of the result of the function
+     * @param <K> the type of the result of the functionIF
      * @param needRetry a java predicate that its exception is wrapped up in RuntimeException .
-     * @param runner a java function that its exception is wrapped up in RuntimeException .
+     * @param runner a java functionIF that its exception is wrapped up in RuntimeException .
      * @param retryTimes the max retry times when {@code needRetry} is true .
      * @param interval the interval when retry running .
      *
@@ -185,70 +188,6 @@ public interface Exia<T>{
             if( ++i > retryTimes) needRun = false;
         }
         return ret;
-    }
-
-    /**
-     * wrap the checked exception to unchecked exception
-     *
-     * @param <E> the type of Exception that may be thrown by the {@code throwingConsumer}
-     * @param throwingConsumer a custom consumer that defines some exception .
-     *
-     * @return a java consumer
-     */
-    default <E extends Exception> Consumer<T> throwingConsumerWrapper(
-            ThrowingConsumer<T, E> throwingConsumer) {
-        return i -> {
-            try {
-                throwingConsumer.accept(i);
-            }catch (RuntimeException rex){
-                throw rex;
-            }catch (Exception ex) {
-                throw new ExceptionWrapper(ex);
-            }
-        };
-    }
-
-    /**
-     * wrap the checked exception to unchecked exception
-     *
-     * @param <K> the type of the result of the function
-     * @param <E> the type of Exception that may be thrown
-     * @param throwingFunction a custom function that defines some exception .
-     *
-     * @return a java Function
-     */
-    default <K,E extends Exception> Function<T,K> throwingFunctionWrapper(
-            ThrowingFunction<T, K, E> throwingFunction) {
-        return i -> {
-            try {
-                return throwingFunction.apply(i);
-            } catch (RuntimeException rex){
-                throw rex;
-            }catch (Exception ex) {
-                throw new ExceptionWrapper(ex);
-            }
-        };
-    }
-
-    /**
-     * wrap the checked exception to unchecked exception
-     *
-     * @param <E> the type of Exception that may be thrown
-     * @param throwingPredicate a custom predicate that defines some exception .
-     *
-     * @return a java predicate
-     */
-    default <E extends Exception> Predicate<T> throwingPredicateWrapper(
-            ThrowingPredicate<T, E> throwingPredicate) {
-        return i -> {
-            try {
-                return throwingPredicate.test(i);
-            } catch (RuntimeException rex){
-                throw rex;
-            }catch (Exception ex) {
-                throw new ExceptionWrapper(ex);
-            }
-        };
     }
 
     /**
@@ -319,27 +258,5 @@ public interface Exia<T>{
         return str.toString();
     }
 
-    final class ExceptionWrapper extends RuntimeException {
-
-        private static final String MSG_PREFIX = "函数执行过程中发生异常:";
-
-        ExceptionWrapper(Exception ex){
-            super(MSG_PREFIX + ex.getMessage());
-            this.initCause(ex);
-        }
-    }
-
-    @FunctionalInterface
-    interface ThrowingConsumer<T, E extends Exception> {
-        void accept(T t) throws E;
-    }
-    @FunctionalInterface
-    interface ThrowingFunction<T, K, E extends Exception> {
-        K apply(T t) throws E;
-    }
-    @FunctionalInterface
-    interface ThrowingPredicate<T, E extends Exception> {
-        boolean test(T t) throws E;
-    }
 }
 
