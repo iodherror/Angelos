@@ -9,7 +9,7 @@
     <groupId>tk.qcsoft.angelos</groupId>
     <artifactId>angelos-root</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <modules>
         <module>exia</module>
         <module>kyrios</module>
@@ -278,7 +278,7 @@
         <url>https://github.com/iodherror/Angelos</url>
         <connection>scm:git:https://github.com/iodherror/Angelos.git</connection>
         <developerConnection>scm:git:https://github.com/iodherror/Angelos.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>v1.0.3</tag>
   </scm>
 
     <developers>
