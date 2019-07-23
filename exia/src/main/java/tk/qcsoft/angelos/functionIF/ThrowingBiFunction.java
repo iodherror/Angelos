@@ -16,6 +16,8 @@ public interface ThrowingBiFunction<T, N, K, E extends Exception> {
      * wrap the checked exception to unchecked exception
      *
      * @param <E> the type of Exception that may be thrown
+     * @param t the first function argument
+     * @param n the second function argument
      *
      * @return result
      */

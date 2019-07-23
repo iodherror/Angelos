@@ -14,6 +14,7 @@ public interface ThrowingFunction<T, K, E extends Exception> {
     /**
      * wrap the checked exception to unchecked exception
      *
+     * @param t the input argument
      * @param <E> the type of Exception that may be thrown
      *
      * @return result

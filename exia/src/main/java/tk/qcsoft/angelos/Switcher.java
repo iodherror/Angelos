@@ -47,6 +47,7 @@ public interface Switcher<T,R>{
      * Wrap obj with Switcher
      *
      * @param <T> the type of the wrapped obj
+     * @param <R> the type of the default value
      * @param value wrapped obj
      *
      * @return Switcher obj

@@ -14,6 +14,7 @@ public interface ThrowingConsumer<T, E extends Exception> {
     /**
      * wrap the checked exception to unchecked exception
      *
+     * @param t the input argument
      * @param <E> the type of Exception that may be thrown by the {@code throwingConsumer}
      */
     default <E extends Exception> void wrapAccept(T t) {
