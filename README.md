@@ -7,7 +7,7 @@ Angelos是一个轻量级java工具库。旨在强化Java开发效率。目前�
         <dependency>
             <groupId>tk.qcsoft.angelos</groupId>
             <artifactId>exia</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </dependency>
 ~~~
 
@@ -62,7 +62,7 @@ public class Person {
                 .eCase(s -> "level 2","22","21")
                 .eCase(s -> "level 3","31","32")
                 .eCase(s -> "level 4","31","41")   //从第三个eCase匹配到了 所以此行不会再执行
-                .<String>run());    //输出 level 3
+                .run());    //输出 level 3
     }
 }                          
 
